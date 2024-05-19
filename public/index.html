@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Ticket</title>
+  <link rel="stylesheet" href="/stylesheets/style.css">
+</head>
+
+<body>
+<h1>Ticket</h1>
+<p>搜尋車票</p>
+
+<form id="ticket">
+  <label for="destination">目的地:</label>
+  <input type="text" id="destination" name="destination"><br><br>
+<!--  <label for="price">價格:</label>-->
+<!--  <input type="text" id="price" name="price"><br><br>-->
+  <label for="date">日期:</label>
+  <input type="text" id="date" name="date"><br><br>
+  <input type="submit" value="提交">
+</form>
+
+<p id="log"></p>
+
+<script>
+  const form = document.querySelector('form');
+  form.addEventListener('submit',async(event) =>{
+    const destination = document.getElementById('destination').value;
+    const date = document.getElementById('date').value;
+    event.preventDefault();
+
+      const res = await fetch('/api', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ destination, date})
+      });
+      const data = await res.json();
+      const formattedResult = data.map(row => `目的地: ${row.destination}   日期: ${row.date}   價格: ${row.price}`).join('<br>');
+      // 將資料分行輸出
+      document.getElementById('log').innerHTML = formattedResult;
+  });
+
+</script>
+</body>
+
+</html>
